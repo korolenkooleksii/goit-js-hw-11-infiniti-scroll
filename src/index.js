@@ -9,6 +9,7 @@ const gallery = document.querySelector('.gallery');
 let totalPages = null;
 const gifLoading = document.querySelector('.loading');
 const arrowUp = document.querySelector('.icon-arrow-up');
+const border = document.querySelector('.border');
 
 const searchApiImages = new SearchApiImages();
 const lightbox = new SimpleLightbox('.gallery a');
@@ -58,7 +59,7 @@ async function fetchImages() {
       return;
     }
 
-    if (totalPages === 1) {
+    if (totalPages === 1 && searchApiImages.page === 2) {
       Notify.success(`Hooray! We found ${searchApiImages.totalHits} images.`);
       createImagesCollection(hits);
       hideGifLoading();
@@ -69,12 +70,6 @@ async function fetchImages() {
     if (searchApiImages.page === 2) {
       Notify.success(`Hooray! We found ${searchApiImages.totalHits} images.`);
     }
-
-    // if (searchApiImages.page > totalPages) {
-    //   Notify.info("We're sorry, but you've reached the end of search results.");
-    //   hideGifLoading();
-
-    // }
 
     createImagesCollection(hits);
     hideGifLoading();
@@ -159,3 +154,22 @@ function clickToArrow() {
     behavior: 'smooth',
   });
 }
+
+const callback = function (entries) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && searchApiImages.searchQuery !== '') {
+      showGifLoading();
+      fetchImages();
+    }
+  });
+};
+
+const options = {
+  root: null,
+  rootMargin: '150px',
+  threshold: 0,
+};
+
+const observer = new IntersectionObserver(callback, options);
+
+observer.observe(border);

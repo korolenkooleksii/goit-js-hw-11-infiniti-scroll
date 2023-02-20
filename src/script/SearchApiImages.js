@@ -8,9 +8,8 @@ export default class SearchApiImages {
     this.page = 1;
     this.searchQuery = '';
     this.totalHits = null;
-    this.perPage = 8;
+    this.perPage = 12;
 
-    this.balancePage = null;
   }
 
   async getImages() {
@@ -20,8 +19,6 @@ export default class SearchApiImages {
     const hits = response.data.hits;
 
     this.totalHits = response.data.totalHits;
-    
-    this.decrimentBalancePage();
 
     this.nextPage();
 
@@ -34,9 +31,5 @@ export default class SearchApiImages {
 
   resetPage() {
     this.page = 1;
-  }
-
-  decrimentBalancePage() {
-    this.balancePage = this.totalHits - this.perPage * this.page;
   }
 }
