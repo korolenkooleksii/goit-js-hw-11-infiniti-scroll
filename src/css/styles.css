@@ -177,9 +177,11 @@ button.visually-hidden {
 }
 
 .icon-arrow-up {
+  width: 3.8vw;
+  height: 3.8vw;
   position: fixed;
-  bottom: 70px;
-  right: 70px;
+  bottom: 3.8vw;
+  right: 3.8vw;
   fill: #3639ecb3;
   z-index: 9999;
   opacity: 1;

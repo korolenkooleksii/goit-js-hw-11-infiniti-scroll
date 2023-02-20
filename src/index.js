@@ -14,36 +14,7 @@ const searchApiImages = new SearchApiImages();
 const lightbox = new SimpleLightbox('.gallery a');
 
 form.addEventListener('submit', searchImg);
-window.addEventListener('scroll', throttle(infinitiScroll, 250));
-
-async function infinitiScroll(e) {
-  const height = gallery.scrollHeight;
-  // gallery.scrollHeight - высота документа (контейнера gallery);
-
-  const screenHeight = window.innerHeight;
-  // window.innerHeight - высота экрана (вьюпорта);
-
-  const scrolled = window.scrollY;
-  // window.scrollY количество проскроллиніх пикселей;
-
-  const threshold = height - screenHeight / 4;
-  // порог, по приближении к нему будем вызывать действие
-
-  const position = scrolled + screenHeight;
-  // отслеживаем где находится низ экрана по отношению к документуж
-
-  if (position >= threshold) {
-    await fetchImages();
-  }
-
-  if (window.scrollY > 700) {
-    arrowUp.classList.remove('ishide');
-    addClickToArrow();
-  } else if (window.scrollY < 700) {
-    arrowUp.classList.add('ishide');
-    removeClickFromArrow();
-  }
-}
+window.addEventListener('scroll', throttle(scrollToArrow, 250));
 
 function searchImg(e) {
   e.preventDefault();
@@ -106,11 +77,8 @@ async function fetchImages() {
     // }
 
     createImagesCollection(hits);
-
-    // hideGifLoading();
+    hideGifLoading();
     lightbox.refresh();
-
-    // if (searchApiImages.page > 2) scrollTheCollection();
   } catch {
     hideGifLoading();
     errorShow();
@@ -162,16 +130,6 @@ function errorShow(error) {
   console.error(error.massege);
 }
 
-function scrollTheCollection() {
-  const { height: cardHeight } =
-    gallery.firstElementChild.getBoundingClientRect();
-
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
-  });
-}
-
 function hideGifLoading() {
   gifLoading.classList.add('visually-hidden');
 }
@@ -179,11 +137,18 @@ function showGifLoading() {
   gifLoading.classList.remove('visually-hidden');
 }
 
-function addClickToArrow() {
+function scrollToArrow() {
+  if (window.scrollY > 700) showArrow();
+  else if (window.scrollY < 700) hideArrow();
+}
+
+function showArrow() {
+  arrowUp.classList.remove('ishide');
   arrowUp.addEventListener('click', clickToArrow);
 }
 
-function removeClickFromArrow() {
+function hideArrow() {
+  arrowUp.classList.add('ishide');
   arrowUp.removeEventListener('click', clickToArrow);
 }
 
