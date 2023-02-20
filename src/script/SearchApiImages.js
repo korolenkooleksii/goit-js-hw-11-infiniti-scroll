@@ -8,18 +8,32 @@ export default class SearchApiImages {
     this.page = 1;
     this.searchQuery = '';
     this.totalHits = null;
-    this.perPage = 16;
-
+    this.perPage = 12;
   }
 
   async getImages() {
-    const URL = `${ENDPOINT}?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${this.perPage}&page=${this.page}`;
+    const options = {
+      params: {
+        q: `${this.searchQuery}`,
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: true,
+        per_page: `${this.perPage}`,
+        page: `${this.page}`,
+      },
+    };
 
-    const response = await axios(URL);
-    const hits = response.data.hits;
+    // const URL = `${ENDPOINT}?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${this.perPage}&page=${this.page}`;
+
+    const URL = `${ENDPOINT}?key=${KEY}`;
+
+    // const response = await axios(URL);
+
+    const response = await axios.get(URL, options);
+
+    const hits = await response.data.hits;
 
     this.totalHits = response.data.totalHits;
-
     this.nextPage();
 
     return hits;
