@@ -14,8 +14,9 @@ const border = document.querySelector('.border');
 const searchApiImages = new SearchApiImages();
 const lightbox = new SimpleLightbox('.gallery a');
 
+
 form.addEventListener('submit', searchImg);
-window.addEventListener('scroll', throttle(scrollToArrow, 250));
+// window.addEventListener('scroll', throttle(scrollToArrow, 250));
 
 function searchImg(e) {
   e.preventDefault();
@@ -46,6 +47,7 @@ async function fetchImages() {
     if (hits.length === 0 && totalPages > 1) {
       Notify.info("We're sorry, but you've reached the end of search results.");
       hideGifLoading();
+      observer.unobserve(border);
 
       return;
     }
@@ -70,7 +72,6 @@ async function fetchImages() {
     if (searchApiImages.page === 2) {
       Notify.success(`Hooray! We found ${searchApiImages.totalHits} images.`);
     }
-
     createImagesCollection(hits);
     hideGifLoading();
     lightbox.refresh();
@@ -132,10 +133,10 @@ function showGifLoading() {
   gifLoading.classList.remove('visually-hidden');
 }
 
-function scrollToArrow() {
-  if (window.scrollY > 700) showArrow();
-  else if (window.scrollY < 700) hideArrow();
-}
+// function scrollToArrow() {
+//   if (window.scrollY > 700) showArrow();
+//   else if (window.scrollY < 700) hideArrow();
+// }
 
 function showArrow() {
   arrowUp.classList.remove('ishide');
@@ -153,20 +154,23 @@ function clickToArrow() {
     left: 0,
     behavior: 'smooth',
   });
+  hideArrow();
 }
 
 const callback = function (entries) {
   entries.forEach(entry => {
     if (entry.isIntersecting && searchApiImages.searchQuery !== '') {
+      console.log(entry);
       showGifLoading();
       fetchImages();
-    }
+      showArrow();
+    } 
   });
 };
 
 const options = {
   root: null,
-  rootMargin: '150px',
+  rootMargin: '0px 0px 150px 0px',
   threshold: 0,
 };
 
