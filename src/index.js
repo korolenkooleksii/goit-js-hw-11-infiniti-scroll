@@ -93,7 +93,7 @@ function createImagesCollection(arr) {
         comments,
         downloads,
       }) => {
-        return `<div class="photo-card">
+        return `<li class="photo-card">
   <div class="wrap-photo">
     <a href="${largeImageURL}">
     <img src="${webformatURL}" alt="${tags}" loading="lazy" width="640"
@@ -105,7 +105,7 @@ function createImagesCollection(arr) {
     <p class="info-item"><b>Comments</b>${comments}</p>
     <p class="info-item"><b>Downloads</b>${downloads}</p>
   </div>
-</div>`;
+</li>`;
       }
     )
     .join('');
