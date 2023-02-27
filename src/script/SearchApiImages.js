@@ -8,7 +8,7 @@ export default class SearchApiImages {
     this.page = 1;
     this.searchQuery = '';
     this.totalHits = null;
-    this.perPage = 12;
+    this.perPage = 40;
   }
 
   async getImages() {
